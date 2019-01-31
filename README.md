@@ -11,7 +11,25 @@ The following are required to run the application on your local machine
 	5. Composer 
 	6. Git
 
-# Installation
+# Installation using docker
+
+To install the application follow the steps below
+
+1. Clone this repository
+
+	- git clone https://github.com/captajo/hulkdemo.git
+
+2. Install necessary third-party plugins
+
+	From the root directory of this project, open your terminal
+
+		- composer install
+
+3. From the root directory of this project, open your terminal and run the following command
+
+		- docker-compose up
+
+# Installation on local machine
 To install the application follow the steps below
 
 1. Clone this repository
@@ -110,3 +128,8 @@ To update your library records
 4. Complete the displayed form
 
 5. Click on `Save Changes` button 
+
+
+# Additional Files
+
+	- PHPUnit Test - (folder dir - /tests/Unit)
