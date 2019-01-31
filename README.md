@@ -26,7 +26,7 @@ To install the application follow the steps below
 
 3. Configure your environment variables
 
-	Edit and update the `.env` file located in the root directory of the project, with the following information
+	Edit and update the `.env` file located in the root directory of the project, with the following information on your MySQL Database
 
 		- DB_HOST=127.0.0.1
 		- DB_PORT=3306
@@ -34,5 +34,44 @@ To install the application follow the steps below
 		- DB_USERNAME=<place-your-db-username-here>
 		- DB_PASSWORD=<place-your-db-password-here>
 
+	[OPTIONAL] Edit and update the `.env` file, with information on your Elasticsearch
+
+		- ELASTICSEARCH_HOST <elasticsearch-host>
+		- ELASTICSEARCH_PORT <elasticsearch-port>
+		- ELASTICSEARCH_SCHEME http
+
+4. Generate new application key
 	
+	From your root directory, open your terminal
+
+		- php artisan key:generate
+
+5. Run your application
+
+	From your root directory, open your terminal
+
+		- php artisan serve
+
+
+6. Launch your browser
+
+	Open your browser and enter `localhost:8000` in your browser url
+
+
+# Indexing Your Application Elasticsearch index
+
+To index/reindex your application
+
+1. Open your browser and enter `localhost:8000/` in your browser url
+
+2. On the application configuration page, click on `Start/Re-Index` Button on the application configuration
+
+
+# Indexing Latest Application Updates in Elasticsearch index
+
+To index the latest changes from your MySQL Database into your Elasticsearch index
+
+1. Open your browser and enter `localhost:8000/` in your browser url
+
+2. On the application configuration page, click on `Index Latest` Button on the application configuration
 
