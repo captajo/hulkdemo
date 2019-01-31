@@ -15,8 +15,13 @@ To install the application follow the steps below
 
 1. Clone this repository
 
-	git clone https://github.com/captajo/hulkdemo.git
+	- git clone https://github.com/captajo/hulkdemo.git
 
 2. Install necessary third-party plugins
 
-	composer install
+	From the root directory of this project, open your terminal
+
+		- composer install
+
+3. Configure your environment variables
+
