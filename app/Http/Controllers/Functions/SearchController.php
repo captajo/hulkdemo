@@ -13,7 +13,14 @@ class SearchController extends Controller
 
     function __construct()
     {
-    	$host = ['http://127.0.0.1:9200'];
+        //get system location for elasticsearch
+        $selected_host = env('ELASTICSEARCH_HOST', '127.0.0.1');
+        $selected_port = env('ELASTICSEARCH_PORT', '9200');
+        $selected_scheme = env('ELASTICSEARCH_SCHEME', 'http');
+
+        $host_address = $selected_scheme.'://'.$selected_host.':'.$selected_port;
+        
+        $host = [$host_address];
         $this->clients = EC::create()->setHosts($host)->build();
     }
 
@@ -29,8 +36,8 @@ class SearchController extends Controller
 	    	$all_videos = Video::with(['actors', 'tags', 'categories'])->get();
     	}	    	
 
+        //index all videos
     	foreach($all_videos as $video) {
-    		// echo $vid->title.' - '.$vid->description.'<br/>';
     		$actors = $video->actors;
     		$listed_actors = $actors->pluck('title')->toArray();
     		$tags = $video->tags;
@@ -60,6 +67,7 @@ class SearchController extends Controller
 
     public function searchDirectory(String $search, $from)
     {
+        //search query
         $query = [
             "bool"=> [
                 "must"=>[
@@ -84,6 +92,7 @@ class SearchController extends Controller
             ]
         ];
         
+        //run search query and get suggestions
         $result =  $this->performSearchQuery($query, $from, $search);
     	return $result;
     }
@@ -94,21 +103,15 @@ class SearchController extends Controller
         //Paginate variables
         $rpp = 10;
         $next = $prev = $last = $total_result = 0;
-        // $from = 0;
-
-        // if($current > 1){
-        //     $from = ($current-1) * $rpp;
-        // }
 
     	$params = [
 			'index'=>'videos',
 			'type'=>'details',
 			'body'=>[
                 'query'=>$query,
-                // 'sort'=>$sort,
                 "from" => $from,
                 "size" => $rpp,
-                "suggest"=> [
+                "suggest"=> [                       // suggestions section
                     "text"=> $search,
                     "simple_title_phrase"=> [
                         "phrase"=> [
@@ -245,6 +248,7 @@ class SearchController extends Controller
         return $info;
     }
 
+    //delete elasticsearch index
     public function deleteAllIndex()
     {
         $response = false;
@@ -258,6 +262,7 @@ class SearchController extends Controller
         return $response;
     }
 
+    //re-index elasticsearch
     public function reIndexLibrary()
     {
     	$indexParams = ['index' => 'videos'];
@@ -273,12 +278,14 @@ class SearchController extends Controller
  		return true;
     }
 
+    //count record in elastic search
     public function countIndexRecord()
     {
     	$indexParams = ['index' => 'videos', 'type'=>'details'];
     	return $this->clients->count($indexParams);
     }
 
+    //update entries in elasticsearch index
     public function updateEntries($videos)
     {
     	foreach($videos as $video) {
@@ -317,6 +324,7 @@ class SearchController extends Controller
 
     private function initialSetUp()
     {
+        //Elasticsearch Index Initialization Parameters
            $params = [
                 'index' => 'videos',
                 'body' => [
@@ -331,10 +339,6 @@ class SearchController extends Controller
                                     "output_unigrams"=> false,
                                     "catenate_words"=>true 
                                 ],
-                                // "simple_stop" => [
-                                //     "type" => "stop",
-                                //     "enable_position_increments" => "false"
-                                // ]
                             ],
                             "analyzer"=> [
                                 "my_shingle_analyzer"=> [
@@ -344,7 +348,6 @@ class SearchController extends Controller
                                     	"standard",
                                         "lowercase",
                                         "my_shingle_filter",
-                                        // "simple_stop"
                                     ]
                                 ],
                             ]

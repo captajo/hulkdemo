@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Functions\SearchController;
 use App\Http\Controllers\Functions\PaginationController;
+use App\Http\Controllers\Functions\ValidationController;
 
 use Carbon\Carbon;
 use Response;
@@ -15,6 +16,9 @@ class SearchItemController extends Controller
 {
     public function search(Request $request)
     {
+        //addition of input validation
+        ValidationController::validateRule(['search_term' => 'string', 'goto' => 'integer', 'first' => 'string|max:7', 'last' => 'string|max:7', 'total' => 'integer' ], $request->all());
+
     	//search variable
     	$search_term = $request->get('search_term');
 

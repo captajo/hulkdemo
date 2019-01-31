@@ -1,7 +1,7 @@
 # Hulkdemo - Library Search
 demo for content search with elasticsearch with memcache for search caching.
 
-# Pre-requisit
+# Pre-requisite
 The following are required to run the application on your local machine
 
 	1. PHP verison ^7.1

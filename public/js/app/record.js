@@ -333,13 +333,13 @@ function updateSelected() {
         formdata.video_id = selected_id;
     } else if(selected == 'tags') {
         url = '/api/tags/update/term';
-        formdata.append('tag_id', selected_id);
+        formdata.append('tag_id', Number(selected_id));
     } else if(selected == 'categories') {
         url = '/api/categories/update';
-        formdata.append('category_id', selected_id);
+        formdata.append('category_id', Number(selected_id));
     } else if(selected == 'actors') {
         url = '/api/actors/update';
-        formdata.append('actor_id', selected_id);
+        formdata.append('actor_id', Number(selected_id));
     }
 
 

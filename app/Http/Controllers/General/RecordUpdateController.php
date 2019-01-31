@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Functions\SearchController;
 use App\Http\Controllers\Functions\PaginationController;
+use App\Http\Controllers\Functions\ValidationController;
 
 use App\Model\Video;
 use App\Model\Actor;
@@ -26,8 +27,13 @@ class RecordUpdateController extends Controller
     	return Response::json(['status' => 'success', 'data' => $all_videos, 'total' => $total], 200);
     }
 
+    //get filter video
     public function filterVideo(Request $request)
     {
+        //addition of validation parameters
+        ValidationController::validateRule(['search_term' => 'string', 'goto' => 'integer', 'first' => 'string|max:7', 'last' => 'string|max:7', 'total' => 'integer' ], $request->all());
+
+        //get all sent params
     	$search_term = $request->get('search_term');
     	$goto = ($request->get('goto'))? $request->get('goto') : 1;
     	$first = (bool)($request->get('first') == 'true')? $request->get('first') : false;
@@ -45,6 +51,7 @@ class RecordUpdateController extends Controller
     		'goto' => $goto
     	]);
 
+        //get specific video
     	$all_videos = Video::skip($pageStructure['start'])->take($pageStructure['pageSize'])->get();
 
     	//report page structure
@@ -60,6 +67,10 @@ class RecordUpdateController extends Controller
 
     public function previewVideo(Request $request)
     {
+        //addition of validation parameters
+        ValidationController::validateRule(['video_id' => 'required|integer'], $request->all());
+
+        //get specific video id
     	$video_id = $request->get('video_id');
 
     	if(!$video = $this->getVideo($video_id))
@@ -70,16 +81,20 @@ class RecordUpdateController extends Controller
 
     public function updateVideo(Request $request)
     {
+        //addition of validation parameters
+        ValidationController::validateRule(['video_id' => 'required|integer', 'title' => 'required|string', 'description' => 'required|string', 'actors' => 'required|array', 'tags' => 'required|array', 'categories' => 'required|array'], $request->json()->all());
+
+        //get specific video id
     	$request = $request->json();
     	$video_id = $request->get('video_id');
-    	// return Response::json($video_id);
     	
     	//find video
     	if(!$video = $this->getVideo($video_id))
     		return Response::json(['status' => 'fail', 'data' => 'Can\'t find video']);
 
+        //update video record
     	if(!$this->updateSelectedVideo($video, $request)) 
-    		return Response::json(['status' => 'fail', 'data' => 'Can\'t find video']);
+    		return Response::json(['status' => 'fail', 'data' => 'An error occured updating video']);
 
     	return Response::json(['status' => 'success', 'data' => 'Video Updated']);
     }
@@ -94,6 +109,10 @@ class RecordUpdateController extends Controller
 
     public function filterActors(Request $request)
     {
+        //addition of validation parameters
+        ValidationController::validateRule(['search_term' => 'string', 'goto' => 'integer', 'first' => 'string|max:7', 'last' => 'string|max:7', 'total' => 'integer'], $request->all());
+
+        //get all sent params
     	$search_term = $request->get('search_term');
     	$goto = ($request->get('goto'))? $request->get('goto') : 1;
     	$first = (bool)($request->get('first') == 'true')? $request->get('first') : false;
@@ -111,15 +130,16 @@ class RecordUpdateController extends Controller
     		'goto' => $goto
     	]);
 
+        //decorate search term
     	if($search_term)
     		$search_term = '%'.$search_term.'%';
 
+        //if search term exist, include in query
     	if($search_term) {
     		$all_actors = Actor::where('title', 'like', $search_term)->skip($pageStructure['start'])->take($pageStructure['pageSize'])->get();
     	} else {
     		$all_actors = Actor::skip($pageStructure['start'])->take($pageStructure['pageSize'])->get();
     	}
-    	
 
     	//report page structure
     	$info = [
@@ -134,8 +154,12 @@ class RecordUpdateController extends Controller
 
     public function previewActor(Request $request)
     {
+        //addition of validation parameters
+        ValidationController::validateRule(['actor_id' => 'required|integer'], $request->all());
+        // get specific actor id
     	$actor_id = $request->get('actor_id');
     	
+        //if actor does not exist
     	if(!$actor = $this->getActor($actor_id))
     		return Response::json(['status' => 'fail', 'data' => 'Can\'t find video']);
 
@@ -144,13 +168,18 @@ class RecordUpdateController extends Controller
 
     public function updateActor(Request $request)
     {
+        //addition of validation parameters
+        ValidationController::validateRule(['actor_id' => 'required|integer', 'title' => 'required|string'], $request->all());
 
+        //get specific actor id
     	$actor_id = $request->get('actor_id');
     	
+        //check if actor exist
     	if(!$actor = $this->getActor($actor_id))
     		return Response::json(['status' => 'fail', 'data' => 'Can\'t find actor']);
 
-    	if(!$this->updateSelectedVideo($actor, $request)) 
+        //update selected video
+    	if(!$this->updateSelectedActor($actor, $request)) 
     		return Response::json(['status' => 'fail', 'data' => 'Error updating actor']);
 
     	return Response::json(['status' => 'success', 'data' => 'Actor Details Updated']);
@@ -166,6 +195,10 @@ class RecordUpdateController extends Controller
 
     public function filterTags(Request $request)
     {
+        //addition of validation parameters
+        ValidationController::validateRule(['search_term' => 'string', 'goto' => 'integer', 'first' => 'string|max:7', 'last' => 'string|max:7', 'total' => 'integer' ], $request->all());
+
+        //get sent params
     	$search_term = $request->get('search_term');
     	$goto = ($request->get('goto'))? $request->get('goto') : 1;
     	$first = (bool)($request->get('first') == 'true')? $request->get('first') : false;
@@ -183,9 +216,11 @@ class RecordUpdateController extends Controller
     		'goto' => $goto
     	]);
 
+        //decorate search term
     	if($search_term)
     		$search_term = '%'.$search_term.'%';
 
+        //include search in query
     	if($search_term) {
     		$all_tags = Tag::where('title', 'like', $search_term)->skip($pageStructure['start'])->take($pageStructure['pageSize'])->get();
     	} else {
@@ -205,8 +240,12 @@ class RecordUpdateController extends Controller
 
     public function previewTag(Request $request)
     {
+        //addition of validation parameters
+        ValidationController::validateRule(['tag_id' => 'required|integer'], $request->all());
+        //get tag id
     	$tag_id = $request->get('tag_id');
     	
+        //check if exist
     	if(!$tag = $this->getTag($tag_id))
     		return Response::json(['status' => 'fail', 'data' => 'Can\'t find tag']);
 
@@ -215,13 +254,16 @@ class RecordUpdateController extends Controller
 
     public function updateTag(Request $request)
     {
+        //addition of validation parameters
+        ValidationController::validateRule(['tag_id' => 'required|integer', 'title' => 'required|string'], $request->all());
+        //get tag id
     	$tag_id = $request->get('tag_id');
     	
+        //check if exist
     	if(!$tag = $this->getTag($tag_id))
     		return Response::json(['status' => 'fail', 'data' => 'Can\'t find tag']);
 
-    	// return Response::json($tag->videos);
-
+        //update selected tag
     	if(!$this->updateSelectedTag($tag, $request)) 
     		return Response::json(['status' => 'fail', 'data' => 'Error updating tag']);
 
@@ -238,6 +280,10 @@ class RecordUpdateController extends Controller
 
     public function filterCategory(Request $request)
     {
+        //addition of validation parameters
+        ValidationController::validateRule(['search_term' => 'string', 'goto' => 'integer', 'first' => 'string|max:7', 'last' => 'string|max:7', 'total' => 'integer' ], $request->all());
+
+        //get sent params
     	$search_term = $request->get('search_term');
     	$goto = ($request->get('goto'))? $request->get('goto') : 1;
     	$first = (bool)($request->get('first') == 'true')? $request->get('first') : false;
@@ -255,9 +301,11 @@ class RecordUpdateController extends Controller
     		'goto' => $goto
     	]);
 
+        //decolorate search term
     	if($search_term)
     		$search_term = '%'.$search_term.'%';
 
+        //include search in query
     	if($search_term) {
     		$all_categories = Category::where('title', 'like', $search_term)->skip($pageStructure['start'])->take($pageStructure['pageSize'])->get();
     	} else {
@@ -277,8 +325,13 @@ class RecordUpdateController extends Controller
 
     public function previewCategory(Request $request)
     {
+        //addition of validation parameters
+        ValidationController::validateRule(['category_id' => 'required|integer'], $request->all());
+
+        //get selected category
     	$category_id = $request->get('category_id');
     	
+        //check if exist
     	if(!$category = $this->getCategory($category_id))
     		return Response::json(['status' => 'fail', 'data' => 'Can\'t find category']);
 
@@ -287,8 +340,13 @@ class RecordUpdateController extends Controller
 
     public function updateCategory(Request $request)
     {
+        //addition of validation parameters
+        ValidationController::validateRule(['category_id' => 'required|integer', 'title' => 'required|string'], $request->all());
+
+        //get selected category
     	$category_id = $request->get('category_id');
     	
+        //check if exist
     	if(!$category = $this->getCategory($category_id))
     		return Response::json(['status' => 'fail', 'data' => 'Can\'t find category']);
 

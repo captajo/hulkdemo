@@ -63,6 +63,7 @@ class RecordUpdateTest extends TestCase
         $actor->save();
 
     	$response = $this->json('POST', '/api/actors/update', [
+            'actor_id' => $actor->id,
             'title' => str_random(10)
         ]);
 
@@ -111,6 +112,7 @@ class RecordUpdateTest extends TestCase
         $tag->save();
 
     	$response = $this->json('POST', '/api/tags/update/term', [
+            'tag_id' => $tag->id,
             'title' => str_random(10)
         ]);
 
@@ -159,6 +161,7 @@ class RecordUpdateTest extends TestCase
         $category->save();
 
     	$response = $this->json('POST', '/api/categories/update', [
+            'category_id' => $category->id,
             'title' => str_random(10)
         ]);
 

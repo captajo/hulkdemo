@@ -1,7 +1,16 @@
 FROM php:7.1-apache
 
 RUN docker-php-ext-install pdo_mysql
-RUN apt-get update
+
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y git
+
+RUN apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev && docker-php-ext-install -j$(nproc) iconv mcrypt && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && docker-php-ext-install -j$(nproc) gd
+
+ RUN apt-get update && apt-get install -y libmemcached-dev \
+ && pecl install memcached \ 
+ && docker-php-ext-enable memcached
 
 RUN a2enmod rewrite
 
@@ -17,16 +26,20 @@ ENV APP_DEBUG true
 ENV APP_LOG_LEVEL debug
 ENV APP_URL http://localhost
 
-ENV ELASTICSEARCH_HOST 34.212.11.82
-ENV ELASTICSEARCH_PORT 80
+ENV ELASTICSEARCH_HOST elasticseach
+ENV ELASTICSEARCH_PORT 9200
 ENV ELASTICSEARCH_SCHEME http
 
+ENV CACHE_DRIVER memcached
+ENV MEMCACHED_HOST memcache
+ENV MEMCACHED_PORT 11211
+
 ENV DB_CONNECTION mysql
-ENV DB_HOST localhost
+ENV DB_HOST db
 ENV DB_PORT 3306
 ENV DB_DATABASE hulkshare
-ENV DB_USERNAME root
-ENV DB_PASSWORD root
+ENV DB_USERNAME user
+ENV DB_PASSWORD test
 
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 

@@ -16,12 +16,6 @@
         <div class="col-sm-12">
           <h2 style="color: white;">Library Configuration</h2>  
           <br>
-          <h4>Application Testing</h4>
-          <ul>
-            <li>Test Database Connectivity (MySQL) - </li>
-            <li>Test Elasticsearch Availability - </li>
-            <li>Test Memcache Availability - </li>
-          </ul>
           <br>
           <h4>Application Elasticsearch Indexing</h4>
           <br>

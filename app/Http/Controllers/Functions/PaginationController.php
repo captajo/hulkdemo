@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 class PaginationController extends Controller
 {
+    //central pagination function
     public static function pagination(Array $currentArray)
     {
     	$pageSize = $currentArray['size'];

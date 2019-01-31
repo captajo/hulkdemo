@@ -9,7 +9,7 @@ function reIndexLibrary() {
             processData: false,
             contentType: false,
             beforeSend: function(xhr) {
-                document.getElementById('reindexButton').setAttribute('class', 'text text-danger');
+                document.getElementById('reindex_resp').setAttribute('class', 'text text-danger');
                 document.getElementById('reindexButton').setAttribute('disabled', 'disabled');
                 document.getElementById('reindex_resp').innerHTML = '<div class="lds-circle"></div> please wait.... might take a minute or two';
             },
@@ -25,7 +25,7 @@ function reIndexLibrary() {
                 console.log('error');
             },
             complete: function() {
-                document.getElementById('reindexButton').setAttribute('class', 'text text-info');
+                document.getElementById('reindex_resp').setAttribute('class', 'text text-info');
                 document.getElementById('reindexButton').removeAttribute('disabled');
                 
             },
