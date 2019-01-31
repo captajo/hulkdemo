@@ -35,6 +35,10 @@ To install the application follow the steps below
 
 		- docker-compose up
 
+5. Launch your browser
+
+	Open your browser and enter `localhost:8000` in your browser url
+
 # Installation on local machine
 To install the application follow the steps below
 
