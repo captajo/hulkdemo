@@ -1,4 +1,4 @@
-# hulkdemo
+# Hulkdemo - Library Search
 demo for content search with elasticsearch with memcache for search caching.
 
 # Pre-requisit
@@ -58,20 +58,55 @@ To install the application follow the steps below
 	Open your browser and enter `localhost:8000` in your browser url
 
 
-# Indexing Your Application Elasticsearch index
+# Library Features
+
+	- Indexing/Re-indexing of library
+	- Indexing only latest updates
+	- Indexing search - based on relevance
+	- Record updating
+	- Search Mis-spell suggestions
+
+
+# HOW TO USE
+
+
+# Indexing Your Library Elasticsearch index
 
 To index/reindex your application
 
 1. Open your browser and enter `localhost:8000/` in your browser url
 
-2. On the application configuration page, click on `Start/Re-Index` Button on the application configuration
+2. On the application configuration page, click on `Start/Re-Index` Button on the library configuration
 
 
-# Indexing Latest Application Updates in Elasticsearch index
+# Indexing Latest Library Updates in Elasticsearch index
 
 To index the latest changes from your MySQL Database into your Elasticsearch index
 
 1. Open your browser and enter `localhost:8000/` in your browser url
 
-2. On the application configuration page, click on `Index Latest` Button on the application configuration
+2. On the application configuration page, click on `Index Latest` Button on the library configuration
 
+
+# Searching Library Index
+
+To search through your index library, follow the steps below
+
+1. Open your browser and enter `localhost:8000/search` in your browser url
+
+2. Enter the `search` term in the search bar provided, to begin searching
+
+
+# Updating your Library Records
+
+To update your library records
+
+1. Open your browser and enter `localhost:8000/update` in your browser url
+
+2. Select the field type you wish to update, from the drop-down menu
+
+3. Select the specific record you wish to update from the displayed items and click `Edit` button
+
+4. Complete the displayed form
+
+5. Click on `Save Changes` button 
