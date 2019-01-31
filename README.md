@@ -25,7 +25,13 @@ To install the application follow the steps below
 
 		- composer install
 
-3. From the root directory of this project, open your terminal and run the following command
+3. Generate new application key
+	
+	From your root directory, open your terminal
+
+		- php artisan key:generate
+
+4. From the root directory of this project, open your terminal and run the following command
 
 		- docker-compose up
 
