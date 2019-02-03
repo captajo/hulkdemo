@@ -39,6 +39,8 @@ To install the application follow the steps below
 
 	Open your browser and enter `localhost:8000` in your browser url
 
+	NOTE: It takes a minute or two for elasticsearch to start fully
+
 # Installation on local machine
 To install the application follow the steps below
 
