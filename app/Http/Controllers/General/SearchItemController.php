@@ -51,7 +51,7 @@ class SearchItemController extends Controller
 
     	//check if item is cached in memcache before
     	if(Cache::has($memcache_term)) {
-    		// $result = Cache::get($memcache_term);
+    		$result = Cache::get($memcache_term);
     	}
 
     	//if no entry from application cache
